@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mercado-ar-rag-service
+spec:
+  selector:
+    app: mercado-ar-rag
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP  # cambiar a LoadBalancer si se expone directo a internet

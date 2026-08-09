@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mercado-ar-rag
+  labels:
+    app: mercado-ar-rag
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mercado-ar-rag
+  template:
+    metadata:
+      labels:
+        app: mercado-ar-rag
+    spec:
+      containers:
+        - name: mercado-ar-rag
+          image: mercado-ar-rag:latest  # reemplazar por la imagen en tu registry (ej. tu-usuario/mercado-ar-rag:1.0)
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: mercado-ar-rag-secrets
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 30
